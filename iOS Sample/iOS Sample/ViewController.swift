@@ -40,10 +40,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // Create a session configuration
         let configuration = ARWorldTrackingConfiguration()
+        configuration.planeDetection = .horizontal
 
-        // Run the view's session
         sceneView.session.run(configuration)
     }
     
@@ -81,14 +80,38 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
 extension ViewController: ARPlaneTrackerDelegate {
     func planeTrackerDidInitialize(_ planeTracker: ARPlaneTracker) {
-//        positioningNode.performOpenAnimation()
     }
     
     func planeTracker(_ planeTracker: ARPlaneTracker, didDetectExtendedPlaneWith hitTestResult: ARHitTestResult, camera: ARCamera?) {
-//        positioningNode.performOpenAnimation()
+        notdetectAnimation()
     }
     
     func planeTracker(_ planeTracker: ARPlaneTracker, didDetect realWorldPlaneAnchor: ARPlaneAnchor, hitTestResult: ARHitTestResult, camera: ARCamera?) {
-//        positioningNode.performCloseAnimation()
+        detectAnimation()
+    }
+    
+    func notdetectAnimation() {
+        guard !positioningNode.hasActions else { return }
+        
+        let fadeOutAction = SCNAction.fadeOut(duration: 0.2)
+        fadeOutAction.timingMode = .easeInEaseOut
+        
+        let fadeInAction = SCNAction.fadeIn(duration: 0.2)
+        fadeInAction.timingMode = .easeInEaseOut
+        
+        let sequence = SCNAction.sequence([fadeOutAction, fadeInAction])
+        let repeatForever = SCNAction.repeatForever(sequence)
+        positioningNode.runAction(repeatForever)
+    }
+    
+    
+    func detectAnimation() {
+        guard positioningNode.hasActions else { return }
+        positioningNode.removeAllActions()
+
+        let fadeInAction = SCNAction.fadeIn(duration: 0.2)
+        fadeInAction.timingMode = .easeInEaseOut
+
+        positioningNode.runAction(fadeInAction)
     }
 }
