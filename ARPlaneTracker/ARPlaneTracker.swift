@@ -48,7 +48,7 @@ public class ARPlaneTracker: SCNNode {
                 }
                 
                 let position = hitTestResult.worldTransform.translation
-                recentFocusSquarePositions.append(position)
+                recentTrackerPositions.append(position)
                 updateTransform(for: position, hitTestResult: hitTestResult, camera: camera)
             }
         }
@@ -56,7 +56,7 @@ public class ARPlaneTracker: SCNNode {
 
     private var updateQueue = DispatchQueue(label: "label")
     
-    public func updateFocusSquare() {
+    public func updateTracker() {
         if let camera = sceneView?.session.currentFrame?.camera,
             case .normal = camera.trackingState, let result = sceneView?.smartCenterHitTest() {
             updateQueue.async {
@@ -74,8 +74,8 @@ public class ARPlaneTracker: SCNNode {
     private var isChangingAlignment = false
     private var currentAlignment: ARPlaneAnchor.Alignment?
     private(set) var currentPlaneAnchor: ARPlaneAnchor?
-    private var recentFocusSquarePositions: [float3] = []
-    private(set) var recentFocusSquareAlignment: [ARPlaneAnchor.Alignment] = []
+    private var recentTrackerPositions: [float3] = []
+    private(set) var recentTrackerAlignment: [ARPlaneAnchor.Alignment] = []
     private var anchorsOfVisitedPlanes: Set<ARAnchor> = []
     
     public weak var sceneView: ARSCNView?
@@ -138,9 +138,9 @@ public class ARPlaneTracker: SCNNode {
 
     
     private func updateTransform(for position: float3, hitTestResult: ARHitTestResult, camera: ARCamera?) {
-        recentFocusSquarePositions = Array(recentFocusSquarePositions.suffix(10))
+        recentTrackerPositions = Array(recentTrackerPositions.suffix(10))
         
-        let average = recentFocusSquarePositions.reduce(float3(repeating: 0), {$0 + $1}) / Float(recentFocusSquarePositions.count)
+        let average = recentTrackerPositions.reduce(float3(repeating: 0), {$0 + $1}) / Float(recentTrackerPositions.count)
         simdPosition = average
         simdScale = float3(repeating: scaleBasedOnDistance(camera: camera))
         
@@ -190,12 +190,12 @@ public class ARPlaneTracker: SCNNode {
         }
         
         if alignment != nil {
-            recentFocusSquareAlignment.append(alignment!)
+            recentTrackerAlignment.append(alignment!)
         }
         
-        recentFocusSquareAlignment = Array(recentFocusSquareAlignment.suffix(20))
-        let horizontalHistory = recentFocusSquareAlignment.filter({ $0 == .horizontal}).count
-        let verticalHistory = recentFocusSquareAlignment.filter({ $0 == .vertical}).count
+        recentTrackerAlignment = Array(recentTrackerAlignment.suffix(20))
+        let horizontalHistory = recentTrackerAlignment.filter({ $0 == .horizontal}).count
+        let verticalHistory = recentTrackerAlignment.filter({ $0 == .vertical}).count
     
         if alignment == .horizontal && horizontalHistory > 15 ||
             alignment == .vertical && verticalHistory > 10 ||
@@ -203,7 +203,7 @@ public class ARPlaneTracker: SCNNode {
             if alignment != currentAlignment {
                 shouldAnimateAlignmentChange = true
                 currentAlignment = alignment
-                recentFocusSquareAlignment.removeAll()
+                recentTrackerAlignment.removeAll()
             }
         } else {
             alignment = currentAlignment

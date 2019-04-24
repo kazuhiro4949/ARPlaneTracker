@@ -73,7 +73,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         DispatchQueue.main.async {
-            self.arPlaneTracker.updateFocusSquare()
+            self.arPlaneTracker.updateTracker()
         }
     }
 }
