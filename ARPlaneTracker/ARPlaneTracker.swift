@@ -154,16 +154,16 @@ public class ARPlaneTracker: SCNNode {
         switch tilt {
         case 0..<threshold1:
             angle = camera.eulerAngles.y
-            
+
         case threshold1..<threshold2:
             let relativeInRange = abs((tilt - threshold1) / (threshold2 - threshold1))
             let normalizedY = normalize(camera.eulerAngles.y, forMinimalRotationTo: yaw)
             angle = normalizedY * (1 - relativeInRange) + yaw * relativeInRange
-            
+
         default:
             angle = yaw
         }
-        
+
         if state != .initializing {
             updateAlignment(for: hitTestResult, yRotationAngle: angle)
         }

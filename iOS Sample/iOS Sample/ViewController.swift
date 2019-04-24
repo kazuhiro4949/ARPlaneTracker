@@ -16,17 +16,25 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @IBOutlet var sceneView: ARSCNView!
     
     let arPlaneTracker = ARPlaneTracker()
-    let positioningNode = PositioningNode()
+    let positioningNode = SCNNode()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         sceneView.delegate = self
         sceneView.showsStatistics = true
         
+        let plane = SCNPlane(width: 0.1, height: 0.1)
+        plane.firstMaterial?.diffuse.contents = UIImage(named: "Image")
+        plane.firstMaterial?.isDoubleSided = true
+        
+        positioningNode.geometry = plane
+        positioningNode.eulerAngles.x = .pi / 2
+        
+        
+        arPlaneTracker.addChildNode(positioningNode)
         arPlaneTracker.sceneView = sceneView
         arPlaneTracker.delegate = self
         sceneView.scene.rootNode.addChildNode(arPlaneTracker)
-        arPlaneTracker.addChildNode(positioningNode)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -73,14 +81,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
 extension ViewController: ARPlaneTrackerDelegate {
     func planeTrackerDidInitialize(_ planeTracker: ARPlaneTracker) {
-        positioningNode.performOpenAnimation()
+//        positioningNode.performOpenAnimation()
     }
     
     func planeTracker(_ planeTracker: ARPlaneTracker, didDetectExtendedPlaneWith hitTestResult: ARHitTestResult, camera: ARCamera?) {
-        positioningNode.performOpenAnimation()
+//        positioningNode.performOpenAnimation()
     }
     
     func planeTracker(_ planeTracker: ARPlaneTracker, didDetect realWorldPlaneAnchor: ARPlaneAnchor, hitTestResult: ARHitTestResult, camera: ARCamera?) {
-        positioningNode.performCloseAnimation()
+//        positioningNode.performCloseAnimation()
     }
 }
