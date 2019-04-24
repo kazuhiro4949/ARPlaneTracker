@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B27207F22704E8600899F1D /* ARPlaneTracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B27207E22704E8600899F1D /* ARPlaneTracker.framework */; };
+		2B27208022704E8600899F1D /* ARPlaneTracker.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2B27207E22704E8600899F1D /* ARPlaneTracker.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2B33759F226CB2E200AEBFC2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B33759E226CB2E200AEBFC2 /* AppDelegate.swift */; };
 		2B3375A3226CB2E200AEBFC2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3375A2226CB2E200AEBFC2 /* ViewController.swift */; };
 		2B3375A6226CB2E200AEBFC2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B3375A4226CB2E200AEBFC2 /* Main.storyboard */; };
@@ -14,7 +16,6 @@
 		2B3375AB226CB2E200AEBFC2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B3375A9226CB2E200AEBFC2 /* LaunchScreen.storyboard */; };
 		2B3375B6226CB2E200AEBFC2 /* iOS_SampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3375B5226CB2E200AEBFC2 /* iOS_SampleTests.swift */; };
 		2B3375C1226CB2E200AEBFC2 /* iOS_SampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3375C0226CB2E200AEBFC2 /* iOS_SampleUITests.swift */; };
-		2B3375D0226CB46500AEBFC2 /* ARPlaneTracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B3375CF226CB46500AEBFC2 /* ARPlaneTracker.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,7 +35,22 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		2B27207D22704E4C00899F1D /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2B27208022704E8600899F1D /* ARPlaneTracker.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		2B27207E22704E8600899F1D /* ARPlaneTracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ARPlaneTracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B33759B226CB2E200AEBFC2 /* iOS Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iOS Sample.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B33759E226CB2E200AEBFC2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2B3375A2226CB2E200AEBFC2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -48,7 +64,6 @@
 		2B3375BC226CB2E200AEBFC2 /* iOS SampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "iOS SampleUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B3375C0226CB2E200AEBFC2 /* iOS_SampleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOS_SampleUITests.swift; sourceTree = "<group>"; };
 		2B3375C2226CB2E200AEBFC2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2B3375CF226CB46500AEBFC2 /* ARPlaneTracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ARPlaneTracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,7 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2B3375D0226CB46500AEBFC2 /* ARPlaneTracker.framework in Frameworks */,
+				2B27207F22704E8600899F1D /* ARPlaneTracker.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,6 +95,7 @@
 		2B337592226CB2E200AEBFC2 = {
 			isa = PBXGroup;
 			children = (
+				2B27207E22704E8600899F1D /* ARPlaneTracker.framework */,
 				2B33759D226CB2E200AEBFC2 /* iOS Sample */,
 				2B3375B4226CB2E200AEBFC2 /* iOS SampleTests */,
 				2B3375BF226CB2E200AEBFC2 /* iOS SampleUITests */,
@@ -132,7 +148,6 @@
 		2B3375CE226CB46500AEBFC2 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				2B3375CF226CB46500AEBFC2 /* ARPlaneTracker.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -147,6 +162,7 @@
 				2B337597226CB2E200AEBFC2 /* Sources */,
 				2B337598226CB2E200AEBFC2 /* Frameworks */,
 				2B337599226CB2E200AEBFC2 /* Resources */,
+				2B27207D22704E4C00899F1D /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

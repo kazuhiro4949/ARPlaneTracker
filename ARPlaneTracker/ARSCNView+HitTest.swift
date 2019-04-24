@@ -8,7 +8,7 @@
 
 import ARKit
 
-public extension ARSCNView {
+extension ARSCNView {
     func smartHitTest(_ point: CGPoint,
                       infinitePlane: Bool = false,
                       objectPosition: float3? = nil,

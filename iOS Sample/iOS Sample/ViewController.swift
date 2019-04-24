@@ -15,14 +15,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
     @IBOutlet var sceneView: ARSCNView!
     
-    var focusSquare = FocusSquare()
+    let arPlaneTracker = ARPlaneTracker()
+    let positioningNode = PositioningNode()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         sceneView.delegate = self
         sceneView.showsStatistics = true
         
-        sceneView.scene.rootNode.addChildNode(focusSquare)
+        arPlaneTracker.sceneView = sceneView
+        arPlaneTracker.delegate = self
+        sceneView.scene.rootNode.addChildNode(arPlaneTracker)
+        arPlaneTracker.addChildNode(positioningNode)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -61,22 +65,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         DispatchQueue.main.async {
-            self.updateFocusSquare()
+            self.arPlaneTracker.updateFocusSquare()
         }
     }
+}
+
+
+extension ViewController: ARPlaneTrackerDelegate {
+    func planeTrackerDidInitialize(_ planeTracker: ARPlaneTracker) {
+        positioningNode.performOpenAnimation()
+    }
     
-    var updateQueue = DispatchQueue(label: "label")
+    func planeTracker(_ planeTracker: ARPlaneTracker, didDetectExtendedPlaneWith hitTestResult: ARHitTestResult, camera: ARCamera?) {
+        positioningNode.performOpenAnimation()
+    }
     
-    func updateFocusSquare() {
-        if let camera = sceneView.session.currentFrame?.camera,
-            case .normal = camera.trackingState, let result = sceneView.smartCenterHitTest() {
-            updateQueue.async {
-                self.focusSquare.state = .detecting(hitTestResult: result, camera: camera)
-            }
-        } else {
-            updateQueue.async {
-                self.focusSquare.state = .initializing
-            }
-        }
+    func planeTracker(_ planeTracker: ARPlaneTracker, didDetect realWorldPlaneAnchor: ARPlaneAnchor, hitTestResult: ARHitTestResult, camera: ARCamera?) {
+        positioningNode.performCloseAnimation()
     }
 }

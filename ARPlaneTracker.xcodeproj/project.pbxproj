@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2B2720822270553400899F1D /* PositioningNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2720812270553400899F1D /* PositioningNode.swift */; };
 		2B337538226C7A9200AEBFC2 /* ARPlaneTracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B33752E226C7A9200AEBFC2 /* ARPlaneTracker.framework */; };
 		2B33753D226C7A9200AEBFC2 /* ARPlaneTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B33753C226C7A9200AEBFC2 /* ARPlaneTrackerTests.swift */; };
 		2B33753F226C7A9200AEBFC2 /* ARPlaneTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 2B337531226C7A9200AEBFC2 /* ARPlaneTracker.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2B337549226C7DC000AEBFC2 /* FocusSquareSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B337548226C7DC000AEBFC2 /* FocusSquareSegment.swift */; };
-		2B33754B226C7DC400AEBFC2 /* FocusSquare.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B33754A226C7DC400AEBFC2 /* FocusSquare.swift */; };
+		2B33754B226C7DC400AEBFC2 /* ARPlaneTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B33754A226C7DC400AEBFC2 /* ARPlaneTracker.swift */; };
 		2B3375D2226CB77800AEBFC2 /* ARSCNView+HitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3375D1226CB77800AEBFC2 /* ARSCNView+HitTest.swift */; };
 /* End PBXBuildFile section */
 
@@ -26,14 +26,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2B2720812270553400899F1D /* PositioningNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositioningNode.swift; sourceTree = "<group>"; };
 		2B33752E226C7A9200AEBFC2 /* ARPlaneTracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ARPlaneTracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B337531226C7A9200AEBFC2 /* ARPlaneTracker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ARPlaneTracker.h; sourceTree = "<group>"; };
 		2B337532226C7A9200AEBFC2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2B337537226C7A9200AEBFC2 /* ARPlaneTrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ARPlaneTrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B33753C226C7A9200AEBFC2 /* ARPlaneTrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPlaneTrackerTests.swift; sourceTree = "<group>"; };
 		2B33753E226C7A9200AEBFC2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2B337548226C7DC000AEBFC2 /* FocusSquareSegment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FocusSquareSegment.swift; sourceTree = "<group>"; };
-		2B33754A226C7DC400AEBFC2 /* FocusSquare.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FocusSquare.swift; sourceTree = "<group>"; };
+		2B33754A226C7DC400AEBFC2 /* ARPlaneTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARPlaneTracker.swift; sourceTree = "<group>"; };
 		2B3375D1226CB77800AEBFC2 /* ARSCNView+HitTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ARSCNView+HitTest.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -78,8 +78,8 @@
 			isa = PBXGroup;
 			children = (
 				2B337531226C7A9200AEBFC2 /* ARPlaneTracker.h */,
-				2B33754A226C7DC400AEBFC2 /* FocusSquare.swift */,
-				2B337548226C7DC000AEBFC2 /* FocusSquareSegment.swift */,
+				2B33754A226C7DC400AEBFC2 /* ARPlaneTracker.swift */,
+				2B2720812270553400899F1D /* PositioningNode.swift */,
 				2B3375D1226CB77800AEBFC2 /* ARSCNView+HitTest.swift */,
 				2B337532226C7A9200AEBFC2 /* Info.plist */,
 			);
@@ -205,8 +205,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B3375D2226CB77800AEBFC2 /* ARSCNView+HitTest.swift in Sources */,
-				2B337549226C7DC000AEBFC2 /* FocusSquareSegment.swift in Sources */,
-				2B33754B226C7DC400AEBFC2 /* FocusSquare.swift in Sources */,
+				2B2720822270553400899F1D /* PositioningNode.swift in Sources */,
+				2B33754B226C7DC400AEBFC2 /* ARPlaneTracker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
