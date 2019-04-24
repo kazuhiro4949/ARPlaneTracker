@@ -57,18 +57,8 @@ public class ARPlaneTracker: SCNNode {
     private var updateQueue = DispatchQueue(label: "label")
     
     public func updateTracker() {
-        if let camera = sceneView?.session.currentFrame?.camera,
-            case .normal = camera.trackingState, let result = sceneView?.smartCenterHitTest() {
-            updateQueue.async {
-                self.sceneView?.scene.rootNode.addChildNode(self)
-                self.state = .detecting(hitTestResult: result, camera: camera)
-            }
-        } else {
-            updateQueue.async {
-                self.sceneView?.pointOfView?.addChildNode(self)
-                self.state = .initializing
-            }
-        }
+        sceneView?.pointOfView?.addChildNode(self)
+        state = .initializing
     }
     
     private var isChangingAlignment = false
