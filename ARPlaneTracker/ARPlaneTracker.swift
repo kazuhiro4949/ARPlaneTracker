@@ -140,7 +140,8 @@ public class ARPlaneTracker: SCNNode {
     private func updateTransform(for position: float3, hitTestResult: ARHitTestResult, camera: ARCamera?) {
         recentTrackerPositions = Array(recentTrackerPositions.suffix(20))
         
-        simdPosition = position
+        let average = recentTrackerPositions.reduce(float3(repeating: 0), {$0 + $1}) / Float(recentTrackerPositions.count)
+        simdPosition = average
         simdScale = float3(repeating: scaleBasedOnDistance(camera: camera))
         
         guard let camera = camera else { return }
