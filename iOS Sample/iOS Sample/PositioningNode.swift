@@ -2,7 +2,7 @@
 //  PositioningNode.swift
 //  ARPlaneTracker
 //
-//  Created by kahayash on 2019/04/24.
+//  Created by Kazuhiro Hayashi on 2019/04/24.
 //  Copyright © 2019 Kazuhiro Hayashi. All rights reserved.
 //
 
