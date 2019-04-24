@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2B27207F22704E8600899F1D /* ARPlaneTracker.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B27207E22704E8600899F1D /* ARPlaneTracker.framework */; };
 		2B27208022704E8600899F1D /* ARPlaneTracker.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2B27207E22704E8600899F1D /* ARPlaneTracker.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2B27208422709F7400899F1D /* PositioningNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B27208322709F7400899F1D /* PositioningNode.swift */; };
 		2B33759F226CB2E200AEBFC2 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B33759E226CB2E200AEBFC2 /* AppDelegate.swift */; };
 		2B3375A3226CB2E200AEBFC2 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3375A2226CB2E200AEBFC2 /* ViewController.swift */; };
 		2B3375A6226CB2E200AEBFC2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2B3375A4226CB2E200AEBFC2 /* Main.storyboard */; };
@@ -51,6 +52,7 @@
 
 /* Begin PBXFileReference section */
 		2B27207E22704E8600899F1D /* ARPlaneTracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ARPlaneTracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B27208322709F7400899F1D /* PositioningNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositioningNode.swift; sourceTree = "<group>"; };
 		2B33759B226CB2E200AEBFC2 /* iOS Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iOS Sample.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2B33759E226CB2E200AEBFC2 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2B3375A2226CB2E200AEBFC2 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 		2B33759D226CB2E200AEBFC2 /* iOS Sample */ = {
 			isa = PBXGroup;
 			children = (
+				2B27208322709F7400899F1D /* PositioningNode.swift */,
 				2B33759E226CB2E200AEBFC2 /* AppDelegate.swift */,
 				2B3375A2226CB2E200AEBFC2 /* ViewController.swift */,
 				2B3375A4226CB2E200AEBFC2 /* Main.storyboard */,
@@ -285,6 +288,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B3375A3226CB2E200AEBFC2 /* ViewController.swift in Sources */,
+				2B27208422709F7400899F1D /* PositioningNode.swift in Sources */,
 				2B33759F226CB2E200AEBFC2 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
