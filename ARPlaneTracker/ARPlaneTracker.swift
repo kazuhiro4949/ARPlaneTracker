@@ -35,7 +35,7 @@ public class ARPlaneTracker: SCNNode {
             
             switch state {
             case .initializing:
-                displayAsBillboard()
+                billboard()
                 
             case let .detecting(hitTestResult, camera):
                 if let planeAnchor = hitTestResult.anchor as? ARPlaneAnchor {
@@ -90,7 +90,7 @@ public class ARPlaneTracker: SCNNode {
     public override func addChildNode(_ child: SCNNode) {
         super.addChildNode(child)
         displayNodeHierarchyOnTop(true)
-        displayAsBillboard()
+        billboard()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -113,7 +113,7 @@ public class ARPlaneTracker: SCNNode {
         updateRenderOrder(for: self)
     }
     
-    private func displayAsBillboard() {
+    private func billboard() {
         simdTransform = matrix_identity_float4x4
         eulerAngles.x = .pi / 2
         simdPosition = float3(0, 0, -0.8)
