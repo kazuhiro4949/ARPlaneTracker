@@ -29,16 +29,15 @@ public protocol ARPlaneTrackerDelegate: AnyObject {
 
 
 public class ARPlaneTracker: SCNNode {
+    enum AlignmentState {
+        case notDetermined
+        case changing
+        case aligned
+    }
+    
     public enum State: Equatable {
         case initializing
         case detecting(hitTestResult: ARHitTestResult, camera: ARCamera?)
-    }
-    
-    public var lastPosition: float3? {
-        switch state {
-        case .initializing: return nil
-        case let .detecting(hitTestResult, _): return hitTestResult.worldTransform.translation
-        }
     }
     
     public var state: State = .initializing {
@@ -65,34 +64,52 @@ public class ARPlaneTracker: SCNNode {
             }
         }
     }
-
-    private var updateQueue = DispatchQueue(label: "label")
     
     public func updateTracker() {
         if let camera = sceneView?.session.currentFrame?.camera,
-            case .normal = camera.trackingState, let result = sceneView?.smartCenterHitTest() {
-            updateQueue.async {
+            case .normal = camera.trackingState,
+            let result = hitTest() {
+            updateQueue.async { [weak self] in
+                guard let self = self else { return }
                 self.sceneView?.scene.rootNode.addChildNode(self)
                 self.state = .detecting(hitTestResult: result, camera: camera)
             }
         } else {
-            updateQueue.async {
+            updateQueue.async { [weak self] in
+                guard let self = self else { return }
                 self.sceneView?.pointOfView?.addChildNode(self)
                 self.state = .initializing
+                self.alignmentState = .notDetermined
             }
         }
     }
     
-    private var isChangingAlignment = false
-    private var currentAlignment: ARPlaneAnchor.Alignment?
-    private(set) var currentPlaneAnchor: ARPlaneAnchor?
-    private var recentTrackerPositions: [float3] = []
-    private(set) var recentTrackerAlignment: [ARPlaneAnchor.Alignment] = []
-    private var anchorsOfVisitedPlanes: Set<ARAnchor> = []
+    private func hitTest() -> ARHitTestResult? {
+        guard let sceneView = sceneView else { return nil }
+        return sceneView.hitTest(
+            sceneView.center,
+            types: [.existingPlaneUsingGeometry, .estimatedHorizontalPlane]
+        ).first(where: {
+            if let anchor = $0.anchor as? ARPlaneAnchor, anchor.alignment == .horizontal {
+                return true
+            } else {
+                return false
+            }
+        })
+    }
+    
+    
+    public private(set) var anchorsOfVisitedPlanes: Set<ARAnchor> = []
+    public private(set) var currentPlaneAnchor: ARPlaneAnchor?
     
     public weak var sceneView: ARSCNView?
     public weak var delegate: ARPlaneTrackerDelegate?
+
     
+    private var updateQueue = DispatchQueue(label: "label")
+    
+    private var alignmentState: AlignmentState = .notDetermined
+    private var recentTrackerPositions: [float3] = []
     
     public override init() {
         super.init()
@@ -101,7 +118,6 @@ public class ARPlaneTracker: SCNNode {
     
     public override func addChildNode(_ child: SCNNode) {
         super.addChildNode(child)
-        displayNodeHierarchyOnTop(true)
         billboard()
     }
     
@@ -109,20 +125,16 @@ public class ARPlaneTracker: SCNNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    public func displayNodeHierarchyOnTop(_ isOnTop: Bool) {
-        func updateRenderOrder(for node: SCNNode) {
-            node.renderingOrder = isOnTop ? 2 : 0
-
-            for material in node.geometry?.materials ?? [] {
-                material.readsFromDepthBuffer = !isOnTop
-            }
-
-            for child in node.childNodes {
-                updateRenderOrder(for: child)
-            }
-        }
-
-        updateRenderOrder(for: self)
+    public func hide() {
+        guard action(forKey: "hide") == nil else { return }
+        
+        runAction(.fadeOut(duration: 0.5), forKey: "hide")
+    }
+    
+    public func unhide() {
+        guard action(forKey: "unhide") == nil else { return }
+        
+        runAction(.fadeIn(duration: 0.5), forKey: "unhide")
     }
     
     private func billboard() {
@@ -134,27 +146,12 @@ public class ARPlaneTracker: SCNNode {
         delegate?.planeTrackerDidInitialize(self)
     }
     
-    public func hide() {
-        guard action(forKey: "hide") == nil else { return }
-        
-        displayNodeHierarchyOnTop(false)
-        runAction(.fadeOut(duration: 0.5), forKey: "hide")
-    }
-    
-    public func unhide() {
-        guard action(forKey: "unhide") == nil else { return }
-        
-        displayNodeHierarchyOnTop(true)
-        runAction(.fadeIn(duration: 0.5), forKey: "unhide")
-    }
-
-    
     private func updateTransform(for position: float3, hitTestResult: ARHitTestResult, camera: ARCamera?) {
         recentTrackerPositions = Array(recentTrackerPositions.suffix(20))
         
         let average = recentTrackerPositions.reduce(float3(repeating: 0), {$0 + $1}) / Float(recentTrackerPositions.count)
         simdPosition = average
-        simdScale = float3(repeating: scaleBasedOnDistance(camera: camera))
+        simdScale = float3(repeating: scale(camera: camera))
         
         guard let camera = camera else { return }
         let tilt = abs(camera.eulerAngles.x)
@@ -177,64 +174,21 @@ public class ARPlaneTracker: SCNNode {
         }
 
         if state != .initializing {
-            updateAlignment(for: hitTestResult, yRotationAngle: angle)
+            align(to: angle)
         }
     }
     
-    private func updateAlignment(for hitTestResult: ARHitTestResult, yRotationAngle angle: Float) {
-        if isChangingAlignment {
+    private func align(to angle: Float) {
+        guard alignmentState == .notDetermined else {
             return
         }
-        
-        var shouldAnimateAlignmentChange = false
         
         let tempNode = SCNNode()
         tempNode.simdRotation = float4(0, 1, 0, angle)
-        
-        var alignment: ARPlaneAnchor.Alignment?
-        
-        if let planeAnchor = hitTestResult.anchor as? ARPlaneAnchor {
-            alignment = planeAnchor.alignment
-        } else if hitTestResult.type == .estimatedHorizontalPlane {
-            alignment = .horizontal
-        } else if hitTestResult.type == .estimatedVerticalPlane {
-            alignment = .vertical
-        }
-        
-        if alignment != nil {
-            recentTrackerAlignment.append(alignment!)
-        }
-        
-        recentTrackerAlignment = Array(recentTrackerAlignment.suffix(20))
-        let horizontalHistory = recentTrackerAlignment.filter({ $0 == .horizontal}).count
-        let verticalHistory = recentTrackerAlignment.filter({ $0 == .vertical}).count
-    
-        if alignment == .horizontal && horizontalHistory > 15 ||
-            alignment == .vertical && verticalHistory > 10 ||
-            hitTestResult.anchor is ARPlaneAnchor {
-            if alignment != currentAlignment {
-                shouldAnimateAlignmentChange = true
-                currentAlignment = alignment
-                recentTrackerAlignment.removeAll()
-            }
-        } else {
-            alignment = currentAlignment
-            return
-        }
-        
-        if alignment == .vertical {
-            tempNode.simdOrientation = hitTestResult.worldTransform.orientation
-            shouldAnimateAlignmentChange = true
-        }
-        
-        if shouldAnimateAlignmentChange {
-            performAlignmentAnimation(to: tempNode.simdOrientation)
-        } else {
-            simdOrientation = tempNode.simdOrientation
-        }
+        animateAlignemnt(to: tempNode.simdOrientation)
     }
     
-    private func scaleBasedOnDistance(camera: ARCamera?) -> Float {
+    private func scale(camera: ARCamera?) -> Float {
         guard let camera = camera else { return 1.0 }
         
         let distanceFromCamera = simd_length(simdWorldPosition - camera.transform.translation)
@@ -257,15 +211,15 @@ public class ARPlaneTracker: SCNNode {
         return normalized
     }
     
-    private func performAlignmentAnimation(to newOrientation: simd_quatf) {
-        isChangingAlignment = true
+    private func animateAlignemnt(to orentation: simd_quatf) {
+        alignmentState = .changing
         SCNTransaction.begin()
-        SCNTransaction.completionBlock = {
-            self.isChangingAlignment = false
+        SCNTransaction.completionBlock = { [weak self] in
+            self?.alignmentState = .aligned
         }
         SCNTransaction.animationDuration = 0.5
         SCNTransaction.animationTimingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
-        simdOrientation = newOrientation
+        simdOrientation = orentation
         SCNTransaction.commit()
     }
 }
