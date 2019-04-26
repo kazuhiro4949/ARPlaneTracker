@@ -91,15 +91,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
 
 extension ViewController: ARPlaneTrackerDelegate {
-    func planeTrackerDidInitialize(_ planeTracker: ARPlaneTracker) {
+    func planeTracker(_ planeTracker: ARPlaneTracker, didDetect horizontalPlaneAnchor: ARPlaneAnchor, hitTestResult: ARHitTestResult, camera: ARCamera?) {
+        detectAnimation()
     }
     
-    func planeTracker(_ planeTracker: ARPlaneTracker, didDetectExtendedPlaneWith hitTestResult: ARHitTestResult, camera: ARCamera?) {
+    func planeTracker(_ planeTracker: ARPlaneTracker, failToDetectHorizontalAnchorWith hitTestResult: ARHitTestResult, camera: ARCamera?) {
         notdetectAnimation()
     }
     
-    func planeTracker(_ planeTracker: ARPlaneTracker, didDetect realWorldPlaneAnchor: ARPlaneAnchor, hitTestResult: ARHitTestResult, camera: ARCamera?) {
-        detectAnimation()
+    func planeTrackerDidInitialize(_ planeTracker: ARPlaneTracker) {
     }
     
     func notdetectAnimation() {

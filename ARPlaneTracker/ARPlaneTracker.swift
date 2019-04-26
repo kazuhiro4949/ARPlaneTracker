@@ -23,8 +23,8 @@ import ARKit
 
 public protocol ARPlaneTrackerDelegate: AnyObject {
     func planeTrackerDidInitialize(_ planeTracker: ARPlaneTracker)
-    func planeTracker(_ planeTracker: ARPlaneTracker, didDetect realWorldPlaneAnchor: ARPlaneAnchor, hitTestResult: ARHitTestResult, camera: ARCamera?)
-    func planeTracker(_ planeTracker: ARPlaneTracker, didDetectExtendedPlaneWith hitTestResult: ARHitTestResult, camera: ARCamera?)
+    func planeTracker(_ planeTracker: ARPlaneTracker, didDetect horizontalPlaneAnchor: ARPlaneAnchor, hitTestResult: ARHitTestResult, camera: ARCamera?)
+    func planeTracker(_ planeTracker: ARPlaneTracker, failToDetectHorizontalAnchorWith hitTestResult: ARHitTestResult, camera: ARCamera?)
 }
 
 
@@ -40,7 +40,7 @@ public class ARPlaneTracker: SCNNode {
         case detecting(hitTestResult: ARHitTestResult, camera: ARCamera?)
     }
     
-    public var state: State = .initializing {
+    public private(set) var state: State = .initializing {
         didSet {
             guard state != oldValue else { return }
             
@@ -49,18 +49,7 @@ public class ARPlaneTracker: SCNNode {
                 billboard()
                 
             case let .detecting(hitTestResult, camera):
-                if let planeAnchor = hitTestResult.anchor as? ARPlaneAnchor {
-                    delegate?.planeTracker(self, didDetect: planeAnchor, hitTestResult: hitTestResult, camera: camera)
-                    anchorsOfVisitedPlanes.insert(planeAnchor)
-                    currentPlaneAnchor = planeAnchor
-                } else {
-                    delegate?.planeTracker(self, didDetectExtendedPlaneWith: hitTestResult, camera: camera)
-                    currentPlaneAnchor = nil
-                }
-                
-                let position = hitTestResult.worldTransform.translation
-                recentTrackerPositions.append(position)
-                updateTransform(for: position, hitTestResult: hitTestResult, camera: camera)
+                target(hitTestResult, camera)
             }
         }
     }
@@ -84,32 +73,17 @@ public class ARPlaneTracker: SCNNode {
         }
     }
     
-    private func hitTest() -> ARHitTestResult? {
-        guard let sceneView = sceneView else { return nil }
-        return sceneView.hitTest(
-            sceneView.center,
-            types: [.existingPlaneUsingGeometry, .estimatedHorizontalPlane]
-        ).first(where: {
-            if let anchor = $0.anchor as? ARPlaneAnchor, anchor.alignment == .horizontal {
-                return true
-            } else {
-                return false
-            }
-        })
-    }
-    
-    
     public private(set) var anchorsOfVisitedPlanes: Set<ARAnchor> = []
     public private(set) var currentPlaneAnchor: ARPlaneAnchor?
     
     public weak var sceneView: ARSCNView?
     public weak var delegate: ARPlaneTrackerDelegate?
-
     
-    private var updateQueue = DispatchQueue(label: "label")
+    private var updateQueue = DispatchQueue(label: "kazuhiro.hayashi.ARPlaneTracker.updateQueue")
     
     private var alignmentState: AlignmentState = .notDetermined
     private var recentTrackerPositions: [float3] = []
+    
     
     public override init() {
         super.init()
@@ -147,13 +121,23 @@ public class ARPlaneTracker: SCNNode {
     }
     
     private func updateTransform(for position: float3, hitTestResult: ARHitTestResult, camera: ARCamera?) {
-        recentTrackerPositions = Array(recentTrackerPositions.suffix(20))
-        
-        let average = recentTrackerPositions.reduce(float3(repeating: 0), {$0 + $1}) / Float(recentTrackerPositions.count)
-        simdPosition = average
+        simdPosition = recentTrackerPositions.avarage
         simdScale = float3(repeating: scale(camera: camera))
-        
-        guard let camera = camera else { return }
+
+        if let camera = camera, state != .initializing && alignmentState == .notDetermined {
+            align(with: camera)
+        }
+    }
+
+    private func hitTest() -> ARHitTestResult? {
+        guard let sceneView = sceneView else { return nil }
+        return sceneView.hitTest(
+            sceneView.center,
+            types: [.existingPlaneUsingGeometry, .estimatedHorizontalPlane]
+            ).first
+    }
+    
+    private func align(with camera: ARCamera) {
         let tilt = abs(camera.eulerAngles.x)
         let threshold1: Float = .pi / 2 * 0.65
         let threshold2: Float = .pi / 2 * 0.75
@@ -163,24 +147,14 @@ public class ARPlaneTracker: SCNNode {
         switch tilt {
         case 0..<threshold1:
             angle = camera.eulerAngles.y
-
+            
         case threshold1..<threshold2:
             let relativeInRange = abs((tilt - threshold1) / (threshold2 - threshold1))
             let normalizedY = normalize(camera.eulerAngles.y, forMinimalRotationTo: yaw)
             angle = normalizedY * (1 - relativeInRange) + yaw * relativeInRange
-
+            
         default:
             angle = yaw
-        }
-
-        if state != .initializing {
-            align(to: angle)
-        }
-    }
-    
-    private func align(to angle: Float) {
-        guard alignmentState == .notDetermined else {
-            return
         }
         
         let tempNode = SCNNode()
@@ -222,6 +196,28 @@ public class ARPlaneTracker: SCNNode {
         simdOrientation = orentation
         SCNTransaction.commit()
     }
+    
+    private func target(_ hitTestResult: ARHitTestResult, _ camera: ARCamera?) {
+        if let planeAnchor = hitTestResult.anchor as? ARPlaneAnchor,
+            hitTestResult.type == .existingPlaneUsingGeometry,
+            planeAnchor.alignment == .horizontal {
+            
+            delegate?.planeTracker(self, didDetect: planeAnchor, hitTestResult: hitTestResult, camera: camera)
+            anchorsOfVisitedPlanes.insert(planeAnchor)
+            currentPlaneAnchor = planeAnchor
+        } else {
+            
+            delegate?.planeTracker(self, failToDetectHorizontalAnchorWith: hitTestResult, camera: camera)
+            currentPlaneAnchor = nil
+        }
+        
+        let position = hitTestResult.worldTransform.translation
+        
+        recentTrackerPositions.append(position)
+        recentTrackerPositions = Array(recentTrackerPositions.suffix(20))
+        
+        updateTransform(for: position, hitTestResult: hitTestResult, camera: camera)
+    }
 }
 
 
@@ -245,5 +241,11 @@ extension float4x4 {
         columns.0.x = scale
         columns.0.y = scale
         columns.0.z = scale
+    }
+}
+
+extension Array where Element == float3 {
+    var avarage: float3 {
+        return reduce(float3(repeating: 0), {$0 + $1}) / Float(count)
     }
 }
