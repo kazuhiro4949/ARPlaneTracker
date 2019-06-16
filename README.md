@@ -117,7 +117,7 @@ override func viewDidLoad() {
 }
 ```
 
-# 3. Update the state of ARPlaneTrack object in ARSCNViewDelegate
+# 4. Update the state of ARPlaneTrack object in ARSCNViewDelegate
 ```swift
 extension ViewController: ARSCNViewDelegate {
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
@@ -128,7 +128,7 @@ extension ViewController: ARSCNViewDelegate {
 }
 ```
 
-# 4. Animate coaching node in ARPlaneTrackerDelegate
+# 5. Animate coaching node in ARPlaneTrackerDelegate
 
 ```swift
 extension ViewController: ARPlaneTrackerDelegate {
