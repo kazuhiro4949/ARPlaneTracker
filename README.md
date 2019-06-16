@@ -85,7 +85,7 @@ $(SRCROOT)/Carthage/Build/iOS/ARPlaneTracker.framework
 import ARPlaneTracker
 ```
 
-# Usage
+# Getting Started
 
 ## 1. Instanciate ARPlaneTracker
 ```swift
@@ -134,9 +134,41 @@ extension ViewController: ARSCNViewDelegate {
 extension ViewController: ARPlaneTrackerDelegate {
     func planeTracker(_ planeTracker: ARPlaneTracker, didDetect horizontalPlaneAnchor: ARPlaneAnchor, hitTestResult: ARHitTestResult, camera: ARCamera?) {
         // add activate animation to coachingNode
+        activateAnimation()
     }
     
     func planeTracker(_ planeTracker: ARPlaneTracker, failToDetectHorizontalAnchorWith hitTestResult: ARHitTestResult, camera: ARCamera?) {
         // add deactivate animation to coachingNode
+        deactivateAnimation()
     }
 }
+```
+## 6. Implement Fade animation to coaching node
+
+```swift
+    // Fade in
+    func activateAnimation() {
+        guard positioningNode.hasActions else { return }
+        positioningNode.removeAllActions()
+
+        let fadeInAction = SCNAction.fadeIn(duration: 0.2)
+        fadeInAction.timingMode = .easeInEaseOut
+
+        positioningNode.runAction(fadeInAction)
+    }
+    
+    // Fade out
+    func deactivateAnimation() {
+        guard !positioningNode.hasActions else { return }
+        
+        let fadeOutAction = SCNAction.fadeOut(duration: 0.2)
+        fadeOutAction.timingMode = .easeInEaseOut
+        
+        let fadeInAction = SCNAction.fadeIn(duration: 0.2)
+        fadeInAction.timingMode = .easeInEaseOut
+        
+        let sequence = SCNAction.sequence([fadeOutAction, fadeInAction])
+        let repeatForever = SCNAction.repeatForever(sequence)
+        positioningNode.runAction(repeatForever)
+    }
+```
