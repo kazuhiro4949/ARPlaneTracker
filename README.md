@@ -4,7 +4,9 @@ Under Construction...
 # What's this?
 
 # Feature
-- [x] easy to track detected area
+- [x] easy to coach detected area
+- [x] easy to associate with your ARSCNView
+- [x] custumizable coaching object
 
 # Requirements
 + iOS 12.0+
@@ -83,4 +85,58 @@ $(SRCROOT)/Carthage/Build/iOS/ARPlaneTracker.framework
 import ARPlaneTracker
 ```
 
-# Getting Started
+# Usage
+
+## 1. Instanciate ARPlaneTracker
+```swift
+class ViewController: UIViewController, ARSCNViewDelegate {
+
+    @IBOutlet var sceneView: ARSCNView!    
+    let arPlaneTracker = ARPlaneTracker()
+    //...
+}
+```
+
+## 2. Add ARPlaneTracker object to the root scene node
+```swift
+override func viewDidLoad() {
+        // ...
+        arPlaneTracker.sceneView = sceneView
+        arPlaneTracker.delegate = self
+        sceneView.scene.rootNode.addChildNode(arPlaneTracker)
+}
+```
+
+## 3. Add a coaching node to ARPlaneTracker object
+```swift
+let coachingNode = SCNNode()
+
+override func viewDidLoad() {
+        // ...
+        arPlaneTracker.addChildNode(coachingNode)
+}
+```
+
+# 3. Update the state of ARPlaneTrack object in ARSCNViewDelegate
+```swift
+extension ViewController: ARSCNViewDelegate {
+    func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
+        DispatchQueue.main.async {
+            self.arPlaneTracker.updateTracker()
+        }
+    }
+}
+```
+
+# 4. Animate coaching node in ARPlaneTrackerDelegate
+
+```swift
+extension ViewController: ARPlaneTrackerDelegate {
+    func planeTracker(_ planeTracker: ARPlaneTracker, didDetect horizontalPlaneAnchor: ARPlaneAnchor, hitTestResult: ARHitTestResult, camera: ARCamera?) {
+        // add activate animation to coachingNode
+    }
+    
+    func planeTracker(_ planeTracker: ARPlaneTracker, failToDetectHorizontalAnchorWith hitTestResult: ARHitTestResult, camera: ARCamera?) {
+        // add deactivate animation to coachingNode
+    }
+}
