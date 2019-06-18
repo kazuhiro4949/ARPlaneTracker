@@ -1,5 +1,6 @@
 # ARPlaneTracker
-Under Construction...
+
+easy to place a guide on AR environment
 
 # What's this?
 
