@@ -11,6 +11,9 @@
 		2B33753D226C7A9200AEBFC2 /* ARPlaneTrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B33753C226C7A9200AEBFC2 /* ARPlaneTrackerTests.swift */; };
 		2B33753F226C7A9200AEBFC2 /* ARPlaneTracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 2B337531226C7A9200AEBFC2 /* ARPlaneTracker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2B33754B226C7DC400AEBFC2 /* ARPlaneTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B33754A226C7DC400AEBFC2 /* ARPlaneTracker.swift */; };
+		2B96493822E82F1300AE7A27 /* CoachingPlaneNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B96493722E82F1300AE7A27 /* CoachingPlaneNode.swift */; };
+		2B96493A22E833AB00AE7A27 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2B96493922E833AB00AE7A27 /* Assets.xcassets */; };
+		2B96493C22E838CA00AE7A27 /* CoachingPlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B96493B22E838CA00AE7A27 /* CoachingPlane.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,6 +34,9 @@
 		2B33753C226C7A9200AEBFC2 /* ARPlaneTrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARPlaneTrackerTests.swift; sourceTree = "<group>"; };
 		2B33753E226C7A9200AEBFC2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2B33754A226C7DC400AEBFC2 /* ARPlaneTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ARPlaneTracker.swift; sourceTree = "<group>"; };
+		2B96493722E82F1300AE7A27 /* CoachingPlaneNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachingPlaneNode.swift; sourceTree = "<group>"; };
+		2B96493922E833AB00AE7A27 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2B96493B22E838CA00AE7A27 /* CoachingPlane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoachingPlane.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,7 +81,10 @@
 			children = (
 				2B337531226C7A9200AEBFC2 /* ARPlaneTracker.h */,
 				2B33754A226C7DC400AEBFC2 /* ARPlaneTracker.swift */,
+				2B96493B22E838CA00AE7A27 /* CoachingPlane.swift */,
+				2B96493722E82F1300AE7A27 /* CoachingPlaneNode.swift */,
 				2B337532226C7A9200AEBFC2 /* Info.plist */,
+				2B96493922E833AB00AE7A27 /* Assets.xcassets */,
 			);
 			path = ARPlaneTracker;
 			sourceTree = "<group>";
@@ -181,6 +190,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B96493A22E833AB00AE7A27 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,7 +208,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B96493822E82F1300AE7A27 /* CoachingPlaneNode.swift in Sources */,
 				2B33754B226C7DC400AEBFC2 /* ARPlaneTracker.swift in Sources */,
+				2B96493C22E838CA00AE7A27 /* CoachingPlane.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

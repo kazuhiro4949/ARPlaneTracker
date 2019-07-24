@@ -24,10 +24,10 @@ import ARKit
 import ARPlaneTracker
 
 class ViewController: UIViewController, ARSCNViewDelegate {
-
     @IBOutlet var sceneView: ARSCNView!
     
     let arPlaneTracker = ARPlaneTracker()
+    let coachingPlane = CoachingPlane()
     let positioningNode = SCNNode()
     
     override func viewDidLoad() {
@@ -61,7 +61,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        // Pause the view's session
         sceneView.session.pause()
     }
 
@@ -86,6 +85,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         DispatchQueue.main.async {
             self.arPlaneTracker.updateTracker()
         }
+    }
+    
+    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
+        coachingPlane.add(on: node, for: anchor)
+    }
+    
+    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
+        coachingPlane.update(for: anchor)
+    }
+    
+    func renderer(_ renderer: SCNSceneRenderer, didRemove node: SCNNode, for anchor: ARAnchor) {
+        coachingPlane.remove(for: anchor)
     }
 }
 
